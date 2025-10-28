@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>echo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-body">
+    <div class="auth-minimal">
+        <div class="auth-content">
+            <h1 class="auth-logo-minimal">echo</h1>
+            
+            <div id="login-form" class="auth-form-minimal active">
+                <h2 class="auth-subtitle">entrar</h2>
+                <input 
+                    type="text" 
+                    id="login-username" 
+                    placeholder="usuário" 
+                    class="input-minimal"
+                    autocomplete="username"
+                >
+                <input 
+                    type="password" 
+                    id="login-password" 
+                    placeholder="senha" 
+                    class="input-minimal"
+                    autocomplete="current-password"
+                >
+                <button class="btn-minimal" id="login-btn">entrar</button>
+                <p class="auth-link">
+                    <a href="#" id="show-register">criar conta</a>
+                </p>
+            </div>
+
+            <div id="register-form" class="auth-form-minimal">
+                <h2 class="auth-subtitle">criar conta</h2>
+                <input 
+                    type="text" 
+                    id="register-name" 
+                    placeholder="nome" 
+                    class="input-minimal"
+                >
+                <input 
+                    type="text" 
+                    id="register-username" 
+                    placeholder="usuário" 
+                    class="input-minimal"
+                    autocomplete="username"
+                >
+                <input 
+                    type="password" 
+                    id="register-password" 
+                    placeholder="senha" 
+                    class="input-minimal"
+                    autocomplete="new-password"
+                >
+                <button class="btn-minimal" id="register-btn">cadastrar</button>
+                <p class="auth-link">
+                    <a href="#" id="show-login">já tenho conta</a>
+                </p>
+            </div>
+
+            <div id="auth-error" class="auth-error-minimal"></div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+</html>
