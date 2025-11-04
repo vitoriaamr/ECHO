@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="pt-br" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Echo • Início</title>
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Tema -->
+  <link href="theme.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">Echo</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="topNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link active" data-view="home" href="#"><i class="bi bi-house"></i> Início</a></li>
+          <li class="nav-item"><a class="nav-link" data-view="explore" href="#"><i class="bi bi-hash"></i> Explorar</a></li>
+          <li class="nav-item"><a class="nav-link" data-view="messages" href="#"><i class="bi bi-chat-dots"></i> Mensagens</a></li>
+          <li class="nav-item"><a class="nav-link" data-view="saved" href="#"><i class="bi bi-bookmark"></i> Salvos</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-2">
+          <button id="btn-theme" class="btn btn-outline-light btn-sm" type="button" aria-pressed="false"><i class="bi bi-sun"></i></button>
+          <a href="#" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modalProfile"><i class="bi bi-person-circle"></i> <span id="nav-name">Perfil</span></a>
+          <button id="btn-logout" class="btn btn-outline-light btn-sm" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Conteúdo -->
+  <main class="container" style="padding-top: 84px;">
+    <div class="row g-4">
+      <!-- Sidebar esquerda -->
+      <aside class="col-lg-3 d-none d-lg-block">
+        <div class="list-group shadow-sm">
+          <button class="list-group-item list-group-item-action active" data-view="home"><i class="bi bi-house"></i> <span class="ms-1">Início</span></button>
+          <button class="list-group-item list-group-item-action" data-view="explore"><i class="bi bi-hash"></i> <span class="ms-1">Explorar</span></button>
+          <button class="list-group-item list-group-item-action" data-view="notifications"><i class="bi bi-bell"></i> <span class="ms-1">Notificações</span></button>
+          <button class="list-group-item list-group-item-action" data-view="messages"><i class="bi bi-chat"></i> <span class="ms-1">Mensagens</span></button>
+          <button class="list-group-item list-group-item-action" data-view="saved"><i class="bi bi-bookmark"></i> <span class="ms-1">Salvos</span></button>
+          <button class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#modalCircles"><i class="bi bi-people"></i> <span class="ms-1">Círculos</span></button>
+          <button class="list-group-item list-group-item-action" data-view="about"><i class="bi bi-info-circle"></i> <span class="ms-1">Sobre</span></button>
+        </div>
+      </aside>
+
+      <!-- Coluna central (SPA views) -->
+      <section class="col-lg-7 col-xl-6" id="main-col">
+
+        <!-- ===== Momentos (opcional) -->
+        <div id="view-momentos" class="mb-3 d-none">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <strong>Momentos</strong>
+                <small class="text-secondary">Expiram em 24h</small>
+              </div>
+              <div id="momentos-strip" class="d-flex gap-3 overflow-auto"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== HOME (composer + feed) -->
+        <div id="view-home">
+          <div class="card shadow-sm mb-3">
+            <div class="card-body">
+              <div class="d-flex">
+                <img id="me-avatar" src="https://ui-avatars.com/api/?name=Echo" class="rounded-circle me-2" width="44" height="44" alt="Avatar">
+                <div class="flex-grow-1">
+                  <textarea id="composer-text" class="form-control mb-2" rows="3" maxlength="500" placeholder="O que está acontecendo?"></textarea>
+
+                  <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <div class="btn-toolbar gap-2">
+                      <input class="form-control form-control-sm" id="composer-image" type="file" accept="image/*">
+                      <select id="composer-visibility" class="form-select form-select-sm w-auto">
+                        <option value="public">Público</option>
+                        <option value="followers">Seguidores</option>
+                        <option value="circle">Círculo…</option>
+                      </select>
+                      <button id="btn-manage-circles" class="btn btn-outline-secondary btn-sm d-none" data-bs-toggle="modal" data-bs-target="#modalCircles">Gerenciar</button>
+                    </div>
+                    <div class="ms-auto d-flex align-items-center gap-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="composer-momento">
+                        <label class="form-check-label" for="composer-momento">Publicar como Momento</label>
+                      </div>
+                      <small class="text-secondary"><span id="counter">0</span>/500</small>
+                      <button id="btn-post" class="btn btn-primary">Echoar</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Skeleton -->
+          <div id="feed-skeleton" class="vstack gap-2 mb-3 d-none">
+            <div class="placeholder-glow card"><div class="card-body"><span class="placeholder col-9"></span><span class="placeholder col-6"></span></div></div>
+            <div class="placeholder-glow card"><div class="card-body"><span class="placeholder col-7"></span><span class="placeholder col-4"></span></div></div>
+          </div>
+
+          <!-- Feed -->
+          <div id="feed" class="vstack gap-3"></div>
+
+          <!-- Empty -->
+          <div id="feed-empty" class="text-center text-secondary d-none">
+            <p>Nenhum post por aqui ainda.</p>
+            <button class="btn btn-outline-secondary btn-sm" id="empty-refresh">Atualizar</button>
+          </div>
+        </div>
+
+        <!-- ===== EXPLORAR -->
+        <div id="view-explore" class="d-none">
+          <div class="card shadow-sm mb-3">
+            <div class="card-body">
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input id="explore-query" class="form-control" placeholder="Buscar por palavras ou #hashtag">
+                <button id="explore-btn" class="btn btn-primary">Buscar</button>
+              </div>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-5">
+              <div class="card shadow-sm">
+                <div class="card-header"><strong>Tendências</strong></div>
+                <ul id="explore-trends" class="list-group list-group-flush"></ul>
+              </div>
+              <div class="card shadow-sm mt-3">
+                <div class="card-header"><strong>Sugestões de perfis</strong></div>
+                <ul id="explore-suggest" class="list-group list-group-flush"></ul>
+              </div>
+            </div>
+            <div class="col-md-7">
+              <div id="explore-results" class="vstack gap-3"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== NOTIFICAÇÕES -->
+        <div id="view-notifications" class="d-none">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="mb-0">Notificações</h5>
+            <div class="btn-group">
+              <button id="btn-mark-all" class="btn btn-outline-secondary btn-sm">Marcar todas como lidas</button>
+              <button id="btn-clear-notif" class="btn btn-outline-danger btn-sm">Limpar</button>
+            </div>
+          </div>
+          <div id="notif-list" class="vstack gap-2"></div>
+        </div>
+
+        <!-- ===== MENSAGENS -->
+        <div id="view-messages" class="d-none">
+          <div class="row g-3">
+            <div class="col-md-5">
+              <div class="card shadow-sm">
+                <div class="card-header"><strong>Conversas</strong></div>
+                <ul id="convo-list" class="list-group list-group-flush"></ul>
+              </div>
+            </div>
+            <div class="col-md-7">
+              <div class="card shadow-sm">
+                <div class="card-body text-center text-secondary">
+                  Selecione uma conversa à esquerda ou abra pelo atalho de Amigos.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SALVOS -->
+        <div id="view-saved" class="d-none">
+          <h5>Itens salvos</h5>
+          <div id="saved-list" class="vstack gap-3"></div>
+        </div>
+
+        <!-- ===== SOBRE -->
+        <div id="view-about" class="d-none">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5>Sobre o Echo</h5>
+              <p>Stack: Bootstrap 5, SPA JS (Fase 1) e PHP + MySQL (Fase 2). Diferenciais: <strong>Círculos</strong> e <strong>Notas de contexto</strong>. Extras: <strong>Momentos</strong> (expiram em 24h).</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Coluna direita -->
+      <aside class="col-lg-3">
+        <div class="card shadow-sm mb-3">
+          <div class="card-body">
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-search"></i></span>
+              <input id="search" class="form-control" placeholder="Buscar no Echo">
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm mb-3">
+          <div class="card-header"><strong>Tendências</strong></div>
+          <ul class="list-group list-group-flush" id="trends">
+            <li class="list-group-item">#echo</li>
+            <li class="list-group-item">#lp4</li>
+            <li class="list-group-item">#fatec</li>
+          </ul>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <strong>Amigos</strong>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalFriends"><i class="bi bi-person-plus"></i></button>
+          </div>
+          <ul class="list-group list-group-flush" id="friends-list"></ul>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- ===== Modais (iguais aos anteriores) ===== -->
+
+  <!-- Perfil -->
+  <div class="modal fade" id="modalProfile" tabindex="-1" aria-labelledby="profileLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="form-profile" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="profileLabel">Editar perfil</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body vstack gap-3">
+          <div>
+            <label class="form-label" for="profile-name">Nome</label>
+            <input id="profile-name" class="form-control" maxlength="80" required>
+          </div>
+          <div>
+            <label class="form-label" for="profile-bio">Bio</label>
+            <textarea id="profile-bio" class="form-control" maxlength="160" rows="2"></textarea>
+          </div>
+          <div>
+            <label class="form-label" for="profile-city">Cidade</label>
+            <input id="profile-city" class="form-control" maxlength="80">
+          </div>
+          <div>
+            <label class="form-label" for="profile-avatar">Avatar</label>
+            <input id="profile-avatar" class="form-control" type="file" accept="image/*">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+          <button class="btn btn-primary" type="submit">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Círculos -->
+  <div class="modal fade" id="modalCircles" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Círculos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="form-circle" class="row g-2 mb-3">
+            <div class="col-8"><input id="circle-name" class="form-control" placeholder="Nome do círculo"></div>
+            <div class="col-4 d-grid"><button class="btn btn-primary" type="submit">Criar</button></div>
+          </form>
+          <ul id="circle-list" class="list-group mb-3"></ul>
+          <div class="border-top pt-3">
+            <h6>Membros</h6>
+            <div class="input-group mb-2">
+              <span class="input-group-text">@</span>
+              <input id="member-handle" class="form-control" placeholder="usuario">
+              <button id="add-member" class="btn btn-outline-secondary" type="button">Adicionar</button>
+            </div>
+            <div id="members-list" class="d-flex flex-wrap gap-2"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notas de contexto -->
+  <div class="modal fade" id="modalContext" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nota de contexto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="context-list" class="vstack gap-2 mb-2"></div>
+          <textarea id="context-body" class="form-control" rows="3" maxlength="400" placeholder="Explique o contexto (fonte, data...)"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" id="context-save" type="button">Publicar nota</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Amigos / Solicitações -->
+  <div class="modal fade" id="modalFriends" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Amigos</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="input-group mb-2">
+            <span class="input-group-text">@</span>
+            <input id="friend-handle" class="form-control" placeholder="usuario">
+            <button id="friend-add" class="btn btn-outline-primary" type="button">Adicionar</button>
+          </div>
+          <ul id="friend-requests" class="list-group mb-3"></ul>
+          <ul id="friends" class="list-group"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat -->
+  <div class="modal fade" id="modalChat" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title" id="chat-with">@alguem</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body" id="chat-messages" style="min-height: 300px;"></div>
+        <div class="modal-footer">
+          <input id="chat-input" class="form-control" placeholder="Mensagem">
+          <button id="chat-send" class="btn btn-primary" type="button">Enviar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="position-fixed bottom-0 start-50 translate-middle-x mb-3">
+    <div id="echoToast" class="toast align-items-center text-bg-dark border-0" role="status" aria-live="polite" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toast-body">Ação realizada.</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
