@@ -1,2 +1,0 @@
-# ECHO
-Trabalho de ELETIVA.
