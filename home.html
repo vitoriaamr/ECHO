@@ -30,7 +30,7 @@
         </ul>
         <div class="d-flex align-items-center gap-2">
           <button id="btn-theme" class="btn btn-outline-light btn-sm" type="button" aria-pressed="false"><i class="bi bi-sun"></i></button>
-          <a href="#" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modalProfile"><i class="bi bi-person-circle"></i> <span id="nav-name">Perfil</span></a>
+          <a href="#" class="btn btn-light btn-sm" id="btn-open-profile"><i class="bi bi-person-circle"></i> <span id="nav-name">Perfil</span></a>
           <button id="btn-logout" class="btn btn-outline-light btn-sm" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
         </div>
       </div>
@@ -184,6 +184,82 @@
           <div id="saved-list" class="vstack gap-3"></div>
         </div>
 
+        <!-- ===== PERFIL (meu ou de outra pessoa) -->
+        <div id="view-profile" class="d-none">
+          <div class="profile-wrapper">
+
+            <!-- CAPA -->
+            <div class="profile-cover"></div>
+
+            <!-- AVATAR -->
+            <div class="profile-avatar-box">
+              <img id="profile-view-avatar" class="profile-avatar" src="" alt="avatar">
+            </div>
+
+            <!-- INFOS PRINCIPAIS -->
+            <div class="profile-info text-center mt-3">
+              <h3 id="profile-view-name" class="fw-bold mb-0">Nome</h3>
+              <div id="profile-view-handle" class="text-secondary">@handle</div>
+              <p id="profile-view-bio" class="mt-2"></p>
+
+              <!-- Cidade -->
+              <div id="profile-view-city" class="text-secondary small d-none">
+                <i class="bi bi-geo-alt"></i> <span></span>
+              </div>
+
+              <!-- Botões -->
+              <div class="d-flex justify-content-center gap-2 mt-3">
+                <button id="profile-view-edit" class="btn btn-outline-light d-none">
+                  Editar Perfil
+                </button>
+                <button id="profile-view-add" class="btn btn-primary d-none">
+                  Adicionar
+                </button>
+                <button id="profile-view-message" class="btn btn-dark d-none">
+                  Mensagem
+                </button>
+              </div>
+
+              <!-- Contadores -->
+              <div class="profile-stats mt-4 d-flex justify-content-center gap-5">
+                <div class="stat">
+                  <div id="profile-view-count-posts" class="stat-number">0</div>
+                  <div class="stat-label">Posts</div>
+                </div>
+                <div class="stat">
+                  <div id="profile-view-count-friends" class="stat-number">0</div>
+                  <div class="stat-label">Amigos</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TABS -->
+            <ul class="nav nav-tabs profile-tabs mt-4" role="tablist">
+              <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tab-posts">Posts</a></li>
+              <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-photos">Fotos</a></li>
+              <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-friends">Amigos</a></li>
+            </ul>
+
+            <!-- CONTEÚDO DAS TABS -->
+            <div class="tab-content mt-3">
+              <!-- POSTS -->
+              <div class="tab-pane fade show active" id="tab-posts">
+                <div id="profile-view-posts"></div>
+              </div>
+
+              <!-- FOTOS -->
+              <div class="tab-pane fade" id="tab-photos">
+                <div class="text-secondary">Em breve: grade de fotos estilo Instagram.</div>
+              </div>
+
+              <!-- AMIGOS -->
+              <div class="tab-pane fade" id="tab-friends">
+                <div class="text-secondary">Em breve: lista completa de amigos.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- ===== SOBRE -->
         <div id="view-about" class="d-none">
           <div class="card shadow-sm">
@@ -226,7 +302,7 @@
     </div>
   </main>
 
-  <!-- ===== Modais (iguais aos anteriores) ===== -->
+  <!-- ===== Modais ===== -->
 
   <!-- Perfil -->
   <div class="modal fade" id="modalProfile" tabindex="-1" aria-labelledby="profileLabel" aria-hidden="true">

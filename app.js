@@ -1,8 +1,8 @@
 /* ==========================
       CONFIG API
 ========================== */
-const API_BASE = 'http://localhost/echo/api';
 
+const API_BASE = '/echo/api';
 async function api(path, { method = 'GET', body = null } = {}) {
   const headers = { 'Content-Type': 'application/json' };
 
@@ -87,7 +87,7 @@ function notify(msg) {
     });
   }
 
-  /* ==== REGISTER (AGORA DE VERDADE) ==== */
+  /* ==== REGISTER ==== */
   if (regForm) {
     const nameInput = document.getElementById('reg-name');
     const userInput = document.getElementById('reg-user');
@@ -126,7 +126,7 @@ function notify(msg) {
     });
   }
 
-})(); // <<< fecha o IIFE do login/register
+})(); // fecha o IIFE do login/register
 
 
 /* ==========================
@@ -136,7 +136,7 @@ function notify(msg) {
   // se não tem feed na página, não é a home
   if (!document.getElementById('feed')) return;
 
-  const token = localStorage.getItem('echoToken');
+  const token   = localStorage.getItem('echoToken');
   const current = localStorage.getItem('echoCurrentUser');
 
   // se não tiver token ou usuário, manda pra tela de login
@@ -169,7 +169,7 @@ function notify(msg) {
     users[current].name || current;
 
   // Tema claro/escuro
-  const btnTheme = document.getElementById('btn-theme');
+  const btnTheme    = document.getElementById('btn-theme');
   const storedTheme = localStorage.getItem('echoTheme') || 'dark';
   if (storedTheme === 'light')
     document.documentElement.setAttribute('data-bs-theme', 'light');
@@ -191,31 +191,36 @@ function notify(msg) {
 
   // ===== Router de views =====
   const views = {
-    home: document.getElementById('view-home'),
-    explore: document.getElementById('view-explore'),
-    notifications: document.getElementById('view-notifications'),
-    messages: document.getElementById('view-messages'),
-    saved: document.getElementById('view-saved'),
-    about: document.getElementById('view-about'),
-    momentos: document.getElementById('view-momentos')
+    home:           document.getElementById('view-home'),
+    explore:        document.getElementById('view-explore'),
+    notifications:  document.getElementById('view-notifications'),
+    messages:       document.getElementById('view-messages'),
+    saved:          document.getElementById('view-saved'),
+    profile:        document.getElementById('view-profile'),
+    about:          document.getElementById('view-about'),
+    momentos:       document.getElementById('view-momentos')
   };
+
   function showView(name) {
     Object.values(views).forEach((v) => v?.classList.add('d-none'));
     if (name === 'home') views.momentos?.classList.remove('d-none');
     views[name]?.classList.remove('d-none');
+
     document.querySelectorAll('[data-view]').forEach((a) => {
       const v = a.getAttribute('data-view');
       a.classList.toggle('active', v === name);
     });
-    if (name === 'explore') renderExplore();
-    if (name === 'notifications') renderNotifications();
-    if (name === 'messages') renderConversations();
-    if (name === 'saved') renderSaved();
+
+    if (name === 'explore')        renderExplore();
+    if (name === 'notifications')  renderNotifications();
+    if (name === 'messages')       renderConversations();
+    if (name === 'saved')          renderSaved();
     if (name === 'home') {
       renderMomentos();
       renderFeed();
     }
   }
+
   document.querySelectorAll('[data-view]').forEach((a) => {
     a.addEventListener('click', (e) => {
       e.preventDefault();
@@ -230,7 +235,7 @@ function notify(msg) {
   }
 
   function renderMomentos() {
-    const box = document.getElementById('view-momentos');
+    const box   = document.getElementById('view-momentos');
     const strip = document.getElementById('momentos-strip');
     if (!box || !strip) return;
 
@@ -253,18 +258,20 @@ function notify(msg) {
   }
   renderMomentos();
 
-  // Perfil
+  // Perfil (modal de edição)
   const formProfile = document.getElementById('form-profile');
   if (formProfile) {
     formProfile['profile-name'].value = users[current].name || '';
-    formProfile['profile-bio'].value = users[current].bio || '';
+    formProfile['profile-bio'].value  = users[current].bio  || '';
     formProfile['profile-city'].value = users[current].city || '';
+
     formProfile.addEventListener('submit', (e) => {
       e.preventDefault();
       users[current].name =
         formProfile['profile-name'].value.trim() || current;
-      users[current].bio = formProfile['profile-bio'].value.trim();
+      users[current].bio  = formProfile['profile-bio'].value.trim();
       users[current].city = formProfile['profile-city'].value.trim();
+
       const file = document.getElementById('profile-avatar').files?.[0];
       if (file) {
         const fr = new FileReader();
@@ -286,13 +293,13 @@ function notify(msg) {
   }
 
   // Composer
-  const txt = document.getElementById('composer-text');
-  const img = document.getElementById('composer-image');
-  const vis = document.getElementById('composer-visibility');
-  const momentoChk = document.getElementById('composer-momento');
+  const txt           = document.getElementById('composer-text');
+  const img           = document.getElementById('composer-image');
+  const vis           = document.getElementById('composer-visibility');
+  const momentoChk    = document.getElementById('composer-momento');
   const btnCircleManage = document.getElementById('btn-manage-circles');
-  const btnPost = document.getElementById('btn-post');
-  const counter = document.getElementById('counter');
+  const btnPost       = document.getElementById('btn-post');
+  const counter       = document.getElementById('counter');
 
   console.log('[Echo] app.js carregado');
   console.log('[Echo] feed existe?', !!document.getElementById('feed'));
@@ -310,7 +317,7 @@ function notify(msg) {
   function saveCircles() {
     localStorage.setItem('echoCircles', JSON.stringify(circles));
   }
-  const circleList = document.getElementById('circle-list');
+  const circleList  = document.getElementById('circle-list');
   const membersList = document.getElementById('members-list');
   let selectedCircleId = circles[0]?.id ?? null;
 
@@ -367,16 +374,18 @@ function notify(msg) {
     }
   });
 
+  // 👉 recolocado: adicionar membro no círculo
   document.getElementById('add-member')?.addEventListener('click', () => {
-    if (!selectedCircleId) return alert('Selecione um círculo.');
-    const handle = document
-      .getElementById('member-handle')
-      .value.trim()
-      .replace(/^@/, '');
+    if (!selectedCircleId) {
+      alert('Selecione um círculo.');
+      return;
+    }
+    const input = document.getElementById('member-handle');
+    const handle = input.value.trim().replace(/^@/, '');
     if (!handle) return;
     const c = circles.find((x) => x.id === selectedCircleId);
     if (!c.members.includes(handle)) c.members.push(handle);
-    document.getElementById('member-handle').value = '';
+    input.value = '';
     saveCircles();
     renderCircles();
   });
@@ -407,28 +416,58 @@ function notify(msg) {
   }
 
   function canSee(post) {
+    // sempre pode ver os próprios posts
+    if (post.author === current) return true;
+
+    const meLocal   = users[current] || {};
+    const myFriends = meLocal.friends || [];
+
+    // se o autor não é meu amigo, não vejo os posts dele
+    if (!myFriends.includes(post.author)) {
+      return false;
+    }
+
+    // se é meu amigo, aí respeito a visibilidade
     if (post.visibility === 'public') return true;
-    if (post.visibility === 'followers') return true;
+
+    if (post.visibility === 'followers') {
+      // por enquanto tratar como "amigos podem ver"
+      return true;
+    }
+
     if (post.visibility === 'circle') {
       const c = circles.find((x) => x.id === post.circleId);
       return post.author === current || c?.members?.includes(current);
     }
-    return true;
+
+    return false;
   }
 
   function cardHTML(p) {
+    const avatarSrc =
+      users[p.author].avatar ||
+      'https://ui-avatars.com/api/?name=' +
+        encodeURIComponent(users[p.author].name);
+
     return `
       <div class="card shadow-sm">
         <div class="card-body">
           <div class="d-flex align-items-center mb-2">
-            <img src="${
-              users[p.author].avatar ||
-              'https://ui-avatars.com/api/?name=' +
-                encodeURIComponent(users[p.author].name)
-            }" class="rounded-circle me-2" width="40" height="40" alt="avatar">
+            <img src="${avatarSrc}"
+                 class="rounded-circle me-2 profile-link"
+                 width="40" height="40" alt="avatar"
+                 data-user="${p.author}">
             <div>
-              <strong>${users[p.author].name}</strong>
-              <span class="text-secondary">@${p.author}</span><br>
+              <strong>
+                <a href="#" class="profile-link text-decoration-none text-light" data-user="${p.author}">
+                  ${users[p.author].name}
+                </a>
+              </strong>
+              <span class="text-secondary">
+                <a href="#" class="profile-link text-decoration-none text-secondary" data-user="${p.author}">
+                  @${p.author}
+                </a>
+              </span><br>
               <small class="text-secondary">${new Date(
                 p.createdAt
               ).toLocaleString()}</small>
@@ -515,18 +554,93 @@ function notify(msg) {
     }
   }
 
+  function renderHomeSuggestions() {
+    const meLocal = users[current];
+    if (!meLocal) return '';
+
+    // conta posts por autor, ignorando o usuário atual
+    const counts = {};
+    posts.forEach((p) => {
+      if (p.author === current) return;
+      counts[p.author] = (counts[p.author] || 0) + 1;
+    });
+
+    const top = Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([u, c]) => ({ u, c }));
+
+    if (!top.length) return '';
+
+    return `
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Sugestões para você</h5>
+          <ul class="list-group list-group-flush">
+            ${top
+              .map(
+                (x) => `
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>${users[x.u].name}</strong>
+                  <span class="text-secondary">@${x.u}</span>
+                  <div class="small text-secondary">${x.c} posts</div>
+                </div>
+                <button class="btn btn-sm btn-outline-primary" type="button"
+                  onclick="document.getElementById('friend-handle').value='@${x.u}';"
+                >
+                  Adicionar
+                </button>
+              </li>`
+              )
+              .join('')}
+          </ul>
+        </div>
+      </div>
+    `;
+  }
+
   function renderFeed() {
     const visible = posts
       .filter(canSee)
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    if (!visible.length) {
+      feedEl.innerHTML = `
+        <div class="card shadow-sm mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Seu feed ainda está vazio</h5>
+            <p class="card-text text-secondary">
+              Você ainda não adicionou ninguém, por isso não há posts para mostrar.
+              Comece adicionando amigos para ver o que eles estão publicando.
+            </p>
+            <div class="d-flex gap-2 flex-wrap">
+              <button class="btn btn-primary" type="button" data-view="explore">
+                Ver explorar
+              </button>
+              <button class="btn btn-outline-secondary" type="button"
+                data-bs-toggle="modal" data-bs-target="#modalFriends">
+                Procurar amigos
+              </button>
+            </div>
+          </div>
+        </div>
+        ${renderHomeSuggestions()}
+      `;
+
+      // garantir que os botões com data-view continuem funcionando
+      document.querySelectorAll('[data-view]').forEach((a) => {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          showView(a.getAttribute('data-view'));
+        });
+      });
+
+      return;
+    }
+
     feedEl.innerHTML = visible.map(cardHTML).join('');
   }
-
-  (async () => {
-    await carregarFeedFromApi();
-    renderFeed();
-  })();
-  showView('home');
 
   // Bookmarks
   let saved = JSON.parse(localStorage.getItem('echoSaved') || '{}');
@@ -575,7 +689,7 @@ function notify(msg) {
     }
     el.innerHTML = list
       .map((n) => {
-        const p = posts.find((x) => x.id === n.postId);
+        const p    = posts.find((x) => x.id === n.postId);
         const when = new Date(n.createdAt).toLocaleString();
         const icon =
           n.type === 'like'
@@ -722,12 +836,12 @@ function notify(msg) {
 
   // Conversas (lista)
   function renderConversations() {
-    const ul = document.getElementById('convo-list');
+    const ul   = document.getElementById('convo-list');
     const conv = users[current].conversations || {};
     const items = Object.keys(conv)
       .map((h) => {
-        const msgs = conv[h];
-        const last = msgs[msgs.length - 1];
+        const msgs   = conv[h];
+        const last   = msgs[msgs.length - 1];
         const preview = last ? (last.text || '').slice(0, 36) : 'Sem mensagens';
         return { h, preview, at: last?.at || 0 };
       })
@@ -762,8 +876,8 @@ function notify(msg) {
       btnPost.textContent = 'Publicando...';
       const fr = new FileReader();
       fr.onload = () => {
-        const media = fr.result;
-        const now = new Date();
+        const media  = fr.result;
+        const now    = new Date();
         const expire = new Date(now.getTime() + 24 * 60 * 60 * 1000);
         momentos.unshift({
           id: Date.now(),
@@ -823,11 +937,11 @@ function notify(msg) {
   feedEl?.addEventListener('click', (e) => {
     const t = e.target.closest('button');
     if (!t) return;
-    const like = t.dataset.like;
+    const like   = t.dataset.like;
     const repost = t.dataset.repost;
-    const del = t.dataset.del;
-    const ctx = t.dataset.context;
-    const sv = t.dataset.save;
+    const del    = t.dataset.del;
+    const ctx    = t.dataset.context;
+    const sv     = t.dataset.save;
 
     if (like) {
       const p = posts.find((x) => x.id === Number(like));
@@ -861,8 +975,8 @@ function notify(msg) {
     }
     if (sv) {
       const list = saved[current] || [];
-      const id = Number(sv);
-      const idx = list.indexOf(id);
+      const id   = Number(sv);
+      const idx  = list.indexOf(id);
       if (idx >= 0) list.splice(idx, 1);
       else list.push(id);
       saved[current] = list;
@@ -880,10 +994,10 @@ function notify(msg) {
 
   // Notas de contexto
   const modalContext = document.getElementById('modalContext');
-  const contextList = document.getElementById('context-list');
-  const contextBody = document.getElementById('context-body');
-  const contextSave = document.getElementById('context-save');
-  let contextNotes = JSON.parse(
+  const contextList  = document.getElementById('context-list');
+  const contextBody  = document.getElementById('context-body');
+  const contextSave  = document.getElementById('context-save');
+  let contextNotes   = JSON.parse(
     localStorage.getItem('echoContextNotes') || '[]'
   );
   let ctxPostId = null;
@@ -947,12 +1061,12 @@ function notify(msg) {
     notify('Nota adicionada');
   });
   contextList?.addEventListener('click', (e) => {
-    const t = e.target;
-    const up = t.dataset.up;
+    const t   = e.target;
+    const up   = t.dataset.up;
     const down = t.dataset.down;
     if (!up && !down) return;
     const id = Number(up || down);
-    const n = contextNotes.find((x) => x.id === id);
+    const n  = contextNotes.find((x) => x.id === id);
     if (!n) return;
     n.score += up ? 1 : -1;
     saveNotes();
@@ -960,11 +1074,11 @@ function notify(msg) {
   });
 
   // Amigos + chat
-  const friendsUl = document.getElementById('friends-list');
-  const reqUl = document.getElementById('friend-requests');
+  const friendsUl   = document.getElementById('friends-list');
+  const reqUl       = document.getElementById('friend-requests');
   const friendsList = document.getElementById('friends');
-  const convoEl = document.getElementById('chat-messages');
-  let me = users[current];
+  const convoEl     = document.getElementById('chat-messages');
+  let me            = users[current];
 
   function renderFriendsSidebar() {
     friendsUl.innerHTML =
@@ -980,6 +1094,123 @@ function notify(msg) {
       '<li class="list-group-item text-secondary">Sem amigos</li>';
   }
   renderFriendsSidebar();
+
+  let currentProfileHandle = current;
+
+  function renderProfile(handle) {
+    const u = users[handle];
+    if (!u) return;
+
+    currentProfileHandle = handle;
+
+    const avatarEl = document.getElementById('profile-view-avatar');
+    const nameEl   = document.getElementById('profile-view-name');
+    const handleEl = document.getElementById('profile-view-handle');
+    const bioEl    = document.getElementById('profile-view-bio');
+    const cityWrap = document.getElementById('profile-view-city');
+    const cityText = cityWrap?.querySelector('span');
+    const postsEl  = document.getElementById('profile-view-posts');
+    const countPostsEl   = document.getElementById('profile-view-count-posts');
+    const countFriendsEl = document.getElementById('profile-view-count-friends');
+
+    const btnEdit    = document.getElementById('profile-view-edit');
+    const btnAdd     = document.getElementById('profile-view-add');
+    const btnMessage = document.getElementById('profile-view-message');
+
+    const isMe     = handle === current;
+    const isFriend = (me.friends || []).includes(handle);
+
+    // Avatar
+    avatarEl.src =
+      u.avatar ||
+      ('https://ui-avatars.com/api/?name=' + encodeURIComponent(u.name || handle));
+
+    nameEl.textContent   = u.name || handle;
+    handleEl.textContent = '@' + handle;
+    bioEl.textContent    = u.bio || 'Este usuário ainda não escreveu uma bio.';
+
+    // cidade
+    if (u.city) {
+      cityWrap.classList.remove('d-none');
+      cityText.textContent = u.city;
+    } else {
+      cityWrap.classList.add('d-none');
+    }
+
+    // contagens
+    const userPosts = posts.filter((p) => p.author === handle);
+    countPostsEl.textContent   = userPosts.length;
+    countFriendsEl.textContent = (u.friends || []).length;
+
+    // posts do usuário (respeitando visibilidade)
+    const visiblePosts = userPosts
+      .filter(canSee)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    postsEl.innerHTML = visiblePosts.length
+      ? visiblePosts.map(cardHTML).join('')
+      : `
+        <div class="card shadow-sm">
+          <div class="card-body text-secondary">
+            Nenhum post para mostrar ainda.
+          </div>
+        </div>
+      `;
+
+    // estados dos botões
+    btnEdit.classList.toggle('d-none', !isMe);
+
+    // "Adicionar" só aparece para outros usuários que ainda não são amigos
+    btnAdd.classList.toggle('d-none', isMe || isFriend);
+
+    // "Mensagem" só faz sentido se for amigo e não for eu mesmo
+    btnMessage.classList.toggle('d-none', isMe || !isFriend);
+
+    // clique em Editar abre o modal de perfil
+    btnEdit.onclick = () => {
+      const modal = new bootstrap.Modal(document.getElementById('modalProfile'));
+      modal.show();
+    };
+
+    // clicar em Adicionar já preenche o campo e reaproveita o fluxo atual
+    btnAdd.onclick = () => {
+      const input = document.getElementById('friend-handle');
+      if (input) {
+        input.value = '@' + handle;
+        const btn = document.getElementById('friend-add');
+        btn?.click();
+      }
+    };
+
+    // clicar em Mensagem abre o chat com a pessoa
+    btnMessage.onclick = () => {
+      openChat(handle);
+      const modal = new bootstrap.Modal(document.getElementById('modalChat'));
+      modal.show();
+    };
+  }
+
+  function openProfile(handle) {
+    if (!users[handle]) return;
+    renderProfile(handle);
+    showView('profile');
+  }
+
+  // botão "Perfil" da navbar abre o próprio perfil
+  document.getElementById('btn-open-profile')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    openProfile(current);
+  });
+
+  // clicar em avatar/nome/@ abre o perfil
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('.profile-link');
+    if (!el) return;
+    e.preventDefault();
+    const handle = el.dataset.user;
+    if (!handle || !users[handle]) return;
+    openProfile(handle);
+  });
 
   document
     .getElementById('friend-add')
@@ -1018,7 +1249,7 @@ function notify(msg) {
   renderRequests();
 
   reqUl?.addEventListener('click', (e) => {
-    const t = e.target;
+    const t   = e.target;
     const acc = t.dataset.acc;
     const rej = t.dataset.rej;
     if (!acc && !rej) return;
@@ -1044,10 +1275,12 @@ function notify(msg) {
       if (!h) return;
       openChat(h);
     });
+
   function openChat(h) {
     document.getElementById('chat-with').textContent = '@' + h;
     renderChat(h);
   }
+
   function renderChat(h) {
     me = users[current];
     me.conversations = me.conversations || {};
@@ -1063,6 +1296,7 @@ function notify(msg) {
       )
       .join('');
   }
+
   document
     .getElementById('chat-send')
     ?.addEventListener('click', () => {
@@ -1070,7 +1304,7 @@ function notify(msg) {
         .getElementById('chat-with')
         .textContent.replace('@', '');
       const input = document.getElementById('chat-input');
-      const text = input.value.trim();
+      const text  = input.value.trim();
       if (!text) return;
       me.conversations = me.conversations || {};
       me.conversations[h] = me.conversations[h] || [];

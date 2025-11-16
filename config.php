@@ -1,8 +1,20 @@
 <?php
-// ajuste conforme seu ambiente
-const DB_HOST = '127.0.0.1';
-const DB_NAME = 'echo';
-const DB_USER = 'root';
-const DB_PASS = ''; // no XAMPP padrão é vazio
-const APP_DEBUG = true;
-const CORS_ORIGIN = '*'; // troque para http://localhost/echo quando quiser travar
+// config.php
+
+$DB_HOST = 'localhost';
+$DB_NAME = 'echo_db';
+$DB_USER = 'root';
+$DB_PASS = '';
+
+try {
+    $pdo = new PDO("mysql:host=$DB_HOST;dbname=$DB_NAME;charset=utf8mb4", $DB_USER, $DB_PASS);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode([
+        'ok' => false,
+        'error' => 'Erro na conexão com o banco: ' . $e->getMessage()
+    ]);
+    exit;
+}
+p://localhost/echo quando quiser travar
