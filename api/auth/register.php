@@ -1,47 +1,41 @@
 <?php
-require_once __DIR__ . '/../../_init.php';
+header("Content-Type: application/json; charset=utf-8");
 
-try {
-    $input = json_decode(file_get_contents('php://input'), true);
+require __DIR__ . '/../db.php';
+require __DIR__ . '/../response.php';
 
-    $name     = trim($input['name'] ?? '');
-    $handle   = strtolower(trim($input['handle'] ?? ''));
-    $password = $input['password'] ?? '';
+$input = json_decode(file_get_contents("php://input"), true);
 
-    if ($name === '' || $handle === '' || strlen($password) < 3) {
-        json_err("Dados inválidos");
-    }
+$name   = trim($input["name"] ?? "");
+$handle = trim($input["handle"] ?? "");
+$pass   = trim($input["password"] ?? "");
 
-    $pdo = Database::pdo();
-
-    // Handle existente?
-    $chk = $pdo->prepare("SELECT id FROM users WHERE handle = ?");
-    $chk->execute([$handle]);
-    if ($chk->fetch()) json_err("Usuário já existe");
-
-    // Criar usuário
-    $hash = password_hash($password, PASSWORD_BCRYPT);
-
-    $stmt = $pdo->prepare("
-        INSERT INTO users (handle, name, password_hash)
-        VALUES (?, ?, ?)
-    ");
-    $stmt->execute([$handle, $name, $hash]);
-
-    $id = $pdo->lastInsertId();
-
-    // Criar token de login automático
-    $token = Auth::newToken($id);
-
-    json_ok([
-        'token' => $token,
-        'user' => [
-            'id' => (int)$id,
-            'handle' => $handle,
-            'name' => $name
-        ]
-    ]);
-
-} catch (Throwable $e) {
-    json_err("Erro: " . $e->getMessage());
+if (!$name || !$handle || !$pass) {
+    json_err("Preencha todos os campos.");
 }
+
+if (strlen($handle) < 3) {
+    json_err("Usuário deve ter ao menos 3 caracteres.");
+}
+
+// Verifica se @handle já existe
+$stmt = $pdo->prepare("SELECT id FROM users WHERE handle = ?");
+$stmt->execute([$handle]);
+
+if ($stmt->fetch()) {
+    json_err("Este @usuário já existe.");
+}
+
+// insere novo usuário
+$stmt = $pdo->prepare("
+    INSERT INTO users (handle, name, password_hash)
+    VALUES (?, ?, ?)
+");
+
+$stmt->execute([
+    $handle,
+    $name,
+    password_hash($pass, PASSWORD_BCRYPT)
+]);
+
+json_ok("Conta criada com sucesso.");

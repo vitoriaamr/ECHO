@@ -1,0 +1,11 @@
+<!-- Edit this file to change the layout of each record in the table view -->
+<!-- To disable clicking of a field, remove the <%%SELECT%%> and <%%ENDSELECT%%> formatters around it-->
+
+<!-- If you wish to hide the table view header that contains the column titles, -->
+<!-- add the following to the post_saves_init() hook (in hooks/post_saves.php file) -->
+<!--     $options->ShowTableHeader = 0;     -->
+
+		<td id="post_saves-id-<%%VALUE(id)%%>" class="post_saves-id text-right"><%%SELECT%%><%%VALUE(id)%%><%%ENDSELECT%%></td>
+		<td id="post_saves-user_id-<%%VALUE(id)%%>" class="post_saves-user_id text-right"><%%SELECT%%><%%VALUE(user_id)%%><%%ENDSELECT%%></td>
+		<td id="post_saves-post_id-<%%VALUE(id)%%>" class="post_saves-post_id text-right"><%%SELECT%%><%%VALUE(post_id)%%><%%ENDSELECT%%></td>
+		<td id="post_saves-created_at-<%%VALUE(id)%%>" class="post_saves-created_at"><%%SELECT%%><%%VALUE(created_at)%%><%%ENDSELECT%%></td>

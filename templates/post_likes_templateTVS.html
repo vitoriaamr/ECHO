@@ -1,0 +1,11 @@
+<!-- Edit this file to change the layout of each record in the table view -->
+<!-- To disable clicking of a field, remove the <%%SELECT%%> and <%%ENDSELECT%%> formatters around it-->
+
+<!-- If you wish to hide the table view header that contains the column titles, -->
+<!-- add the following to the post_likes_init() hook (in hooks/post_likes.php file) -->
+<!--     $options->ShowTableHeader = 0;     -->
+
+		<td id="post_likes-id-<%%VALUE(id)%%>" class="post_likes-id text-right text-bold"><%%VALUE(id)%%></td>
+		<td id="post_likes-user_id-<%%VALUE(id)%%>" class="post_likes-user_id text-right text-bold"><%%VALUE(user_id)%%></td>
+		<td id="post_likes-post_id-<%%VALUE(id)%%>" class="post_likes-post_id text-right text-bold"><%%VALUE(post_id)%%></td>
+		<td id="post_likes-created_at-<%%VALUE(id)%%>" class="post_likes-created_at text-bold"><%%VALUE(created_at)%%></td>

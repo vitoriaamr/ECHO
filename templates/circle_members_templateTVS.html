@@ -1,0 +1,11 @@
+<!-- Edit this file to change the layout of each record in the table view -->
+<!-- To disable clicking of a field, remove the <%%SELECT%%> and <%%ENDSELECT%%> formatters around it-->
+
+<!-- If you wish to hide the table view header that contains the column titles, -->
+<!-- add the following to the circle_members_init() hook (in hooks/circle_members.php file) -->
+<!--     $options->ShowTableHeader = 0;     -->
+
+		<td id="circle_members-id-<%%VALUE(id)%%>" class="circle_members-id text-right text-bold"><%%VALUE(id)%%></td>
+		<td id="circle_members-circle_id-<%%VALUE(id)%%>" class="circle_members-circle_id text-right text-bold"><%%VALUE(circle_id)%%></td>
+		<td id="circle_members-user_id-<%%VALUE(id)%%>" class="circle_members-user_id text-right text-bold"><%%VALUE(user_id)%%></td>
+		<td id="circle_members-added_at-<%%VALUE(id)%%>" class="circle_members-added_at text-bold"><%%VALUE(added_at)%%></td>

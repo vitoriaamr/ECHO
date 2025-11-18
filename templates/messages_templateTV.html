@@ -1,0 +1,12 @@
+<!-- Edit this file to change the layout of each record in the table view -->
+<!-- To disable clicking of a field, remove the <%%SELECT%%> and <%%ENDSELECT%%> formatters around it-->
+
+<!-- If you wish to hide the table view header that contains the column titles, -->
+<!-- add the following to the messages_init() hook (in hooks/messages.php file) -->
+<!--     $options->ShowTableHeader = 0;     -->
+
+		<td id="messages-id-<%%VALUE(id)%%>" class="messages-id text-right"><%%SELECT%%><%%VALUE(id)%%><%%ENDSELECT%%></td>
+		<td id="messages-sender_id-<%%VALUE(id)%%>" class="messages-sender_id text-right"><%%SELECT%%><%%VALUE(sender_id)%%><%%ENDSELECT%%></td>
+		<td id="messages-receiver_id-<%%VALUE(id)%%>" class="messages-receiver_id text-right"><%%SELECT%%><%%VALUE(receiver_id)%%><%%ENDSELECT%%></td>
+		<td id="messages-body-<%%VALUE(id)%%>" class="messages-body"><%%SELECT%%><%%VALUE(body)%%><%%ENDSELECT%%></td>
+		<td id="messages-created_at-<%%VALUE(id)%%>" class="messages-created_at"><%%SELECT%%><%%VALUE(created_at)%%><%%ENDSELECT%%></td>

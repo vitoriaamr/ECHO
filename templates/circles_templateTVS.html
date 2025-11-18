@@ -1,0 +1,11 @@
+<!-- Edit this file to change the layout of each record in the table view -->
+<!-- To disable clicking of a field, remove the <%%SELECT%%> and <%%ENDSELECT%%> formatters around it-->
+
+<!-- If you wish to hide the table view header that contains the column titles, -->
+<!-- add the following to the circles_init() hook (in hooks/circles.php file) -->
+<!--     $options->ShowTableHeader = 0;     -->
+
+		<td id="circles-id-<%%VALUE(id)%%>" class="circles-id text-right text-bold"><%%VALUE(id)%%></td>
+		<td id="circles-owner_id-<%%VALUE(id)%%>" class="circles-owner_id text-right text-bold"><%%VALUE(owner_id)%%></td>
+		<td id="circles-name-<%%VALUE(id)%%>" class="circles-name text-bold"><%%VALUE(name)%%></td>
+		<td id="circles-created_at-<%%VALUE(id)%%>" class="circles-created_at text-bold"><%%VALUE(created_at)%%></td>

@@ -1,0 +1,85 @@
+<!-- Edit this file to change the layout of the detail view print preview page -->
+
+
+<div class="panel-heading"><h3 class="panel-title">
+	<strong><%%DETAIL_VIEW_TITLE%%></strong>
+	<div class="hidden-print pull-right">
+		<div class="btn-group">
+			<button type="button" id="print" onclick="window.print();" title="<%%TRANSLATION(Print)%%>" class="btn btn-primary"><i class="glyphicon glyphicon-print"></i> <%%TRANSLATION(Print)%%></button>
+			<button type="submit" id="back" title="<%%TRANSLATION(Cancel Printing)%%>" class="btn btn-default"><i class="glyphicon glyphicon-remove-circle"></i> <%%TRANSLATION(Cancel Printing)%%></button>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</h3></div>
+
+<div class="panel-body">
+	<fieldset class="form-horizontal">
+		<!-- Field: Id -->
+		<div class="form-group users-id" style="border-bottom: dotted 1px #DDD;">
+			<label class="col-xs-3 control-label">Id</label>
+			<div class="col-xs-9">
+				<div class="form-control-static"><%%VALUE(id)%%></div>
+			</div>
+		</div>
+		<!-- Field: Handle -->
+		<div class="form-group users-handle" style="border-bottom: dotted 1px #DDD;">
+			<label class="col-xs-3 control-label">Handle</label>
+			<div class="col-xs-9">
+				<div class="form-control-static"><%%VALUE(handle)%%></div>
+			</div>
+		</div>
+		<!-- Field: Name -->
+		<div class="form-group users-name" style="border-bottom: dotted 1px #DDD;">
+			<label class="col-xs-3 control-label">Name</label>
+			<div class="col-xs-9">
+				<div class="form-control-static"><%%VALUE(name)%%></div>
+			</div>
+		</div>
+		<!-- Field: Password hash -->
+		<div class="form-group users-password_hash" style="border-bottom: dotted 1px #DDD;">
+			<label class="col-xs-3 control-label">Password hash</label>
+			<div class="col-xs-9">
+				<div class="form-control-static"><%%VALUE(password_hash)%%></div>
+			</div>
+		</div>
+		<!-- Field: Bio -->
+		<div class="form-group users-bio" style="border-bottom: dotted 1px #DDD;">
+			<label class="col-xs-3 control-label">Bio</label>
+			<div class="col-xs-9">
+				<div class="form-control-static"><%%VALUE(bio)%%></div>
+			</div>
+		</div>
+		<!-- Field: City -->
+		<div class="form-group users-city" style="border-bottom: dotted 1px #DDD;">
+			<label class="col-xs-3 control-label">City</label>
+			<div class="col-xs-9">
+				<div class="form-control-static"><%%VALUE(city)%%></div>
+			</div>
+		</div>
+		<!-- Field: Avatar -->
+		<div class="form-group users-avatar" style="border-bottom: dotted 1px #DDD;">
+			<label class="col-xs-3 control-label">Avatar</label>
+			<div class="col-xs-9">
+				<div class="form-control-static"><%%VALUE(avatar)%%></div>
+			</div>
+		</div>
+		<!-- Field: Created at -->
+		<div class="form-group users-created_at" style="border-bottom: dotted 1px #DDD;">
+			<label class="col-xs-3 control-label">Created at</label>
+			<div class="col-xs-9">
+				<div class="form-control-static"><%%VALUE(created_at)%%></div>
+			</div>
+		</div>
+	</fieldset>
+</div>
+<script>
+	$j(function() {
+		// render read-only checkboxes in DVP
+		$j('form input[type=checkbox]:not(.hidden):checked')
+			.addClass('hidden')
+			.after('<i class="glyphicon glyphicon-check"></i>');
+		$j('form input[type=checkbox]:not(.hidden):not(:checked)')
+			.addClass('hidden')
+			.after('<i class="glyphicon glyphicon-unchecked"></i>')
+	})
+</script>

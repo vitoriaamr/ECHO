@@ -1,38 +1,37 @@
 <?php
-require_once __DIR__ . '/../../_init.php';
+header("Content-Type: application/json; charset=utf-8");
 
-try {
-    $input = json_decode(file_get_contents('php://input'), true);
-    if (!$input) json_err("JSON inválido");
+require __DIR__ . '/../db.php';
+require __DIR__ . '/../response.php';
+require __DIR__ . '/token.php';
 
-    $handle   = strtolower(trim($input['handle'] ?? ''));
-    $password = $input['password'] ?? '';
+// JSON recebido
+$input = json_decode(file_get_contents("php://input"), true);
 
-    if ($handle === '' || $password === '') {
-        json_err("Usuário e senha obrigatórios");
-    }
+$handle = trim($input["handle"] ?? "");
+$pass   = trim($input["password"] ?? "");
 
-    $pdo = Database::pdo();
-
-    // Buscar usuário
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE handle = ? LIMIT 1");
-    $stmt->execute([$handle]);
-    $user = $stmt->fetch();
-
-    if (!$user || !password_verify($password, $user['password_hash'])) {
-        json_err("Usuário ou senha inválidos");
-    }
-
-    // Gerar token
-    $token = Auth::newToken($user['id']);
-
-    unset($user['password_hash'], $user['avatar']);
-
-    json_ok([
-        'token' => $token,
-        'user'  => $user
-    ]);
-
-} catch (Throwable $e) {
-    json_err("Erro interno: " . $e->getMessage(), 500);
+if (!$handle || !$pass) {
+    json_err("Preencha usuário e senha.");
 }
+
+// Buscar usuário
+$stmt = $pdo->prepare("SELECT id, password_hash, name, handle, avatar FROM users WHERE handle = ?");
+$stmt->execute([$handle]);
+$user = $stmt->fetch();
+
+if (!$user) {
+    json_err("Usuário não encontrado.");
+}
+
+if (!password_verify($pass, $user["password_hash"])) {
+    json_err("Senha incorreta.");
+}
+
+$token = make_token($user["id"]);
+
+// resposta final
+json_ok([
+    "token" => $token,
+    "user"  => $user
+]);

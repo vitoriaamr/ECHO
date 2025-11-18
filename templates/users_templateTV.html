@@ -1,0 +1,15 @@
+<!-- Edit this file to change the layout of each record in the table view -->
+<!-- To disable clicking of a field, remove the <%%SELECT%%> and <%%ENDSELECT%%> formatters around it-->
+
+<!-- If you wish to hide the table view header that contains the column titles, -->
+<!-- add the following to the users_init() hook (in hooks/users.php file) -->
+<!--     $options->ShowTableHeader = 0;     -->
+
+		<td id="users-id-<%%VALUE(id)%%>" class="users-id text-right"><%%SELECT%%><%%VALUE(id)%%><%%ENDSELECT%%></td>
+		<td id="users-handle-<%%VALUE(id)%%>" class="users-handle"><%%SELECT%%><%%VALUE(handle)%%><%%ENDSELECT%%></td>
+		<td id="users-name-<%%VALUE(id)%%>" class="users-name"><%%SELECT%%><%%VALUE(name)%%><%%ENDSELECT%%></td>
+		<td id="users-password_hash-<%%VALUE(id)%%>" class="users-password_hash"><%%SELECT%%><%%VALUE(password_hash)%%><%%ENDSELECT%%></td>
+		<td id="users-bio-<%%VALUE(id)%%>" class="users-bio"><%%SELECT%%><%%VALUE(bio)%%><%%ENDSELECT%%></td>
+		<td id="users-city-<%%VALUE(id)%%>" class="users-city"><%%SELECT%%><%%VALUE(city)%%><%%ENDSELECT%%></td>
+		<td id="users-avatar-<%%VALUE(id)%%>" class="users-avatar"><%%SELECT%%><%%VALUE(avatar)%%><%%ENDSELECT%%></td>
+		<td id="users-created_at-<%%VALUE(id)%%>" class="users-created_at"><%%SELECT%%><%%VALUE(created_at)%%><%%ENDSELECT%%></td>
