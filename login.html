@@ -1,141 +1,772 @@
 <!doctype html>
 <html lang="pt-br" data-bs-theme="dark">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Echo • Entrar</title>
 
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
 
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
 
-  <link href="theme.css" rel="stylesheet">
+    body {
+      min-height: 100vh;
+      background: #0a0a0a;
+      overflow-x: hidden;
+      overflow-y: auto;
+      font-family: 'JetBrains Mono', monospace;
+      position: relative;
+    }
+
+    /* Added animated grid background */
+    .grid-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(100, 190, 200, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100, 190, 200, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridMove 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes gridMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+
+    /* Added floating particles */
+    .particle {
+      position: fixed;
+      width: 2px;
+      height: 2px;
+      background: rgba(100, 190, 200, 0.6);
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(100, 190, 200, 0.8);
+      animation: float linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100px) translateX(100px);
+        opacity: 0;
+      }
+    }
+
+    /* Added ambient glow effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 70% 60%, rgba(100, 190, 200, 0.08) 0%, transparent 50%);
+      animation: ambientMove 20s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes ambientMove {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-10%, -10%) scale(1.1); }
+    }
+
+    /* Added decorative lines */
+    .deco-line {
+      position: fixed;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(100, 190, 200, 0.3), transparent);
+      z-index: 1;
+      animation: lineGlow 3s ease-in-out infinite alternate;
+    }
+
+    .deco-line-1 {
+      top: 20%;
+      left: 0;
+      right: 0;
+      animation-delay: 0s;
+    }
+
+    .deco-line-2 {
+      top: 50%;
+      left: 0;
+      right: 0;
+      animation-delay: 1s;
+    }
+
+    .deco-line-3 {
+      top: 80%;
+      left: 0;
+      right: 0;
+      animation-delay: 2s;
+    }
+
+    @keyframes lineGlow {
+      0% { opacity: 0.1; }
+      100% { opacity: 0.4; }
+    }
+
+    /* E AZUL SECO LÁ NO TOPO DA TELA */
+    .big-e {
+      position: fixed;
+      top: 1vh;
+      left:1vw;
+      font-size: 9vw;
+      font-weight: 800;
+      color: #64BEC8;
+      letter-spacing: -0.1em;
+      z-index: 999;
+      user-select: none;
+      pointer-events: none;
+      opacity: 0.9;
+      text-shadow: 0 0 30px rgba(100, 190, 200, 0.5),
+                   0 0 60px rgba(100, 190, 200, 0.3);
+      animation: logoGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes logoGlow {
+      0% { text-shadow: 0 0 30px rgba(100, 190, 200, 0.5), 0 0 60px rgba(100, 190, 200, 0.3); }
+      100% { text-shadow: 0 0 40px rgba(100, 190, 200, 0.7), 0 0 80px rgba(100, 190, 200, 0.4); }
+    }
+
+    /* TERRA */
+    .earth {
+      position: fixed;
+      right: 8rem;
+      bottom: 5rem;
+      width: 46rem;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: url('https://i.postimg.cc/9QCCCVsQ/earth.png') repeat-x center/cover;
+      opacity: 0.8;
+      animation: earth 40s linear infinite, pulse 2s linear infinite alternate-reverse;
+      z-index: 1;
+      box-shadow:
+        0 -1px 1px 1px white,
+        -1px 1px 1px 1px #64BEC8,
+        0 0 var(--pulse) -20px #64BEC8,
+        inset 0 0 76px -10px #64BEC8,
+        inset 0 0 var(--pulse2) -10px #64BEC8;
+    }
+
+    @keyframes earth { from { background-position:0 0; } to { background-position:-199% 0; } }
+    @keyframes pulse { 0% { --pulse:8rem; --pulse2:5.6rem; } 100% { --pulse:10rem; --pulse2:3.6rem; } }
+
+    /* Enhanced login box with glassmorphism */
+    .login-box {
+      margin-left: 4rem;
+      margin-top: 10vh; /* Reduzindo margin-top de 25vh para 10vh para subir o card */
+      max-width: 460px;
+      z-index: 10;
+      position: relative;
+    }
+
+    /* Added hero text above login */
+    .hero-text {
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .hero-text h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 0.5rem 0;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      text-shadow: 0 0 40px rgba(100, 190, 200, 0.3);
+    }
+
+    .hero-text .gradient-text {
+      background: linear-gradient(135deg, #64BEC8 0%, #7DD5DF 50%, #64BEC8 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% center; }
+      50% { background-position: 100% center; }
+    }
+
+    .hero-text p {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 400;
+      margin: 0;
+      letter-spacing: 0.01em;
+    }
+
+    /* Improved card styling with better glassmorphism */
+    .login-box .card {
+      background: rgba(10, 10, 10, 0.7);
+      backdrop-filter: blur(30px);
+      border: 1px solid rgba(100, 190, 200, 0.25);
+      border-radius: 28px;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(100, 190, 200, 0.15) inset,
+        0 0 100px -20px rgba(100, 190, 200, 0.2);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Added subtle shine effect on card */
+    .login-box .card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(100, 190, 200, 0.08) 0%, transparent 70%);
+      animation: cardShine 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes cardShine {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(10%, 10%); }
+    }
+
+    .login-box .card:hover {
+      border-color: rgba(100, 190, 200, 0.4);
+      box-shadow: 
+        0 25px 70px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(100, 190, 200, 0.25) inset,
+        0 0 120px -15px rgba(100, 190, 200, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .login-box .card-body {
+      padding: 2.75rem !important;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Enhanced nav pills styling */
+    .nav-pills .nav-link {
+      color: rgba(255, 255, 255, 0.6);
+      border-radius: 12px;
+      padding: 0.65rem 1.5rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    .nav-pills .nav-link:hover {
+      color: #64BEC8;
+      background: rgba(100, 190, 200, 0.1);
+      border-color: rgba(100, 190, 200, 0.2);
+    }
+
+    .nav-pills .nav-link.active {
+      background: linear-gradient(135deg, rgba(100, 190, 200, 0.2), rgba(100, 190, 200, 0.1));
+      color: #64BEC8;
+      border-color: rgba(100, 190, 200, 0.3);
+      box-shadow: 0 4px 12px rgba(100, 190, 200, 0.15);
+    }
+
+    /* Enhanced form inputs */
+    .form-label {
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.02em;
+    }
+
+    .form-control {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: #fff;
+      padding: 0.75rem 1rem;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+
+    .form-control:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #64BEC8;
+      box-shadow: 0 0 0 3px rgba(100, 190, 200, 0.15), 0 4px 12px rgba(100, 190, 200, 0.1);
+      color: #fff;
+    }
+
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .input-group-text {
+      background: rgba(100, 190, 200, 0.1);
+      border: 1px solid rgba(100, 190, 200, 0.2);
+      border-radius: 12px 0 0 12px;
+      color: #64BEC8;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .input-group:focus-within .input-group-text {
+      background: rgba(100, 190, 200, 0.15);
+      border-color: #64BEC8;
+    }
+
+    /* Enhanced buttons */
+    .btn-primary {
+      background: linear-gradient(135deg, #64BEC8 0%, #4A9DA5 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 0.85rem 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(100, 190, 200, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #7DD5DF 0%, #5AB5BE 100%);
+      box-shadow: 0 6px 25px rgba(100, 190, 200, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 10px rgba(100, 190, 200, 0.4);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #64BEC8 0%, #4A9DA5 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 0.85rem 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(100, 190, 200, 0.3);
+    }
+
+    .btn-success:hover {
+      background: linear-gradient(135deg, #7DD5DF 0%, #5AB5BE 100%);
+      box-shadow: 0 6px 25px rgba(100, 190, 200, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .btn-link {
+      color: #64BEC8;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 0.875rem;
+    }
+
+    .btn-link:hover {
+      color: #7DD5DF;
+      text-decoration: underline;
+      text-shadow: 0 0 10px rgba(100, 190, 200, 0.3);
+    }
+
+    /* Enhanced alert styling */
+    .alert {
+      border-radius: 12px;
+      border: 1px solid;
+      backdrop-filter: blur(10px);
+      font-size: 0.875rem;
+    }
+
+    /* Enhanced hr styling */
+    hr {
+      border-color: rgba(100, 190, 200, 0.15);
+      opacity: 1;
+      margin: 1.5rem 0;
+    }
+
+    /* Enhanced footer text */
+    .text-secondary {
+      color: rgba(255, 255, 255, 0.5) !important;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    /* Enhanced tab animations */
+    .tab-pane {
+      animation: fadeInUp 0.4s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Added footer responsivo */
+    .footer-nav {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+      text-align: center;
+      z-index: 20;
+      white-space: nowrap;
+    }
+
+    /* Media queries para responsividade total */
+    
+    /* Tablets e telas médias */
+    @media (max-width: 1200px) {
+      .earth {
+        width: 35rem;
+        right: 5rem;
+        bottom: 3rem;
+      }
+      
+      .big-e {
+        font-size: 25vw;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .earth {
+        width: 28rem;
+        right: 2rem;
+        bottom: 2rem;
+      }
+      
+      .big-e {
+        font-size: 22vw;
+      }
+      
+      .login-box {
+        margin-left: 3rem;
+      }
+      
+      .hero-text h1 {
+        font-size: 2.5rem;
+      }
+    }
+
+    /* Tablets portrait e celulares landscape */
+    @media (max-width: 768px) {
+      .earth {
+        width: 20rem;
+        right: -5rem;
+        bottom: -5rem;
+        opacity: 0.4;
+      }
+      
+      .big-e {
+        font-size: 20vw;
+        left: 2vw;
+      }
+      
+      .login-box {
+        margin-left: 2rem;
+        margin-right: 2rem;
+        margin-top: 8vh;
+        max-width: calc(100% - 4rem);
+      }
+      
+      .login-box .card-body {
+        padding: 2rem !important;
+      }
+      
+      .hero-text h1 {
+        font-size: 2.25rem;
+      }
+      
+      .hero-text p {
+        font-size: 1rem;
+      }
+      
+      .footer-nav {
+        font-size: 0.65rem;
+        white-space: normal;
+        max-width: 90%;
+        line-height: 1.4;
+      }
+
+      .nav-pills .nav-link {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+      }
+    }
+
+    /* Celulares pequenos */
+    @media (max-width: 480px) {
+      .earth {
+        width: 15rem;
+        right: -8rem;
+        bottom: -8rem;
+        opacity: 0.3;
+      }
+      
+      .big-e {
+        font-size: 18vw;
+        left: 3vw;
+      }
+      
+      .login-box {
+        margin: 6vh 1rem 0;
+        max-width: calc(100% - 2rem);
+      }
+      
+      .login-box .card {
+        border-radius: 20px;
+      }
+      
+      .login-box .card-body {
+        padding: 1.5rem !important;
+      }
+      
+      .hero-text {
+        margin-bottom: 1.5rem;
+      }
+      
+      .hero-text h1 {
+        font-size: 1.85rem;
+      }
+      
+      .hero-text p {
+        font-size: 0.9rem;
+      }
+
+      .nav-pills .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+      }
+
+      .form-control, .input-group-text {
+        font-size: 0.875rem;
+      }
+
+      .btn-primary, .btn-success {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.85rem;
+      }
+
+      .footer-nav {
+        font-size: 0.55rem;
+        bottom: 1rem;
+      }
+
+      .deco-line {
+        display: none;
+      }
+    }
+
+    /* Celulares muito pequenos */
+    @media (max-width: 360px) {
+      .big-e {
+        font-size: 15vw;
+      }
+
+      .hero-text h1 {
+        font-size: 1.6rem;
+      }
+
+      .hero-text p {
+        font-size: 0.85rem;
+      }
+
+      .login-box .card-body {
+        padding: 1.25rem !important;
+      }
+    }
+
+    /* Telas muito grandes */
+    @media (min-width: 1600px) {
+      .earth {
+        width: 55rem;
+        right: 10rem;
+        bottom: 7rem;
+      }
+      
+      .big-e {
+        font-size: 32vw;
+      }
+      
+      .login-box {
+        margin-left: 6rem;
+        max-width: 520px;
+      }
+      
+      .hero-text h1 {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
 </head>
 
-<body class="bg-body-tertiary">
+<body>
 
+  <!-- Added animated grid background -->
+  <div class="grid-background"></div>
 
-  <nav class="navbar navbar-dark bg-primary sticky-top">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="#">Echo</a>
-   
-      <button id="fill-demo" class="btn btn-outline-light btn-sm d-none">Demo</button>
-    </div>
-  </nav>
+  <!-- Added decorative lines -->
+  <div class="deco-line deco-line-1"></div>
+  <div class="deco-line deco-line-2"></div>
+  <div class="deco-line deco-line-3"></div>
 
+ 
 
-  <main class="container py-5">
-    <div class="row justify-content-center">
-      <div class="col-12 col-md-7 col-lg-5">
-        <div class="card shadow-sm">
-          <div class="card-body p-4">
+  <!-- Terra -->
+  <div class="earth"></div>
 
-            <ul class="nav nav-pills mb-4">
-              <li class="nav-item">
-                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#login-pane">
-                  Entrar
-                </button>
-              </li>
-              <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#register-pane">
-                  Criar conta
-                </button>
-              </li>
-            </ul>
+  <main class="container">
+    <div class="login-box">
 
-            <div class="tab-content">
+      <!-- Added hero text above login card -->
+      <div class="hero-text">
+        <h1>Bem-vindo ao <span class="gradient-text">Echo</span></h1>
+        <p>Conecte-se e explore um novo mundo</p>
+      </div>
+  
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <!-- seu login aqui (igual antes) -->
+          <ul class="nav nav-pills mb-4">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#login-pane">Entrar</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#register-pane">Criar conta</button></li>
+          </ul>
 
-           
-              <div class="tab-pane fade show active" id="login-pane">
-                <form id="form-login" class="vstack gap-3" novalidate>
-
-                  <div>
-                    <label class="form-label">Usuário (@handle)</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="bi bi-person"></i></span>
-                      <input id="login-user" class="form-control" required autocomplete="username" placeholder="seuusuario">
-                    </div>
+          <div class="tab-content">
+            <div class="tab-pane fade show active" id="login-pane">
+              <form id="form-login" class="vstack gap-3" novalidate>
+                <div>
+                  <label class="form-label">Usuário (@handle)</label>
+                  <div class="input-group">
+                    <!-- Adicionando ícone correto do Bootstrap Icons -->
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input id="login-user" class="form-control" required autocomplete="username" placeholder="seuusuario">
                   </div>
-
-                  <div>
-                    <label class="form-label">Senha</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                      <input id="login-pass" type="password" class="form-control" required autocomplete="current-password">
-                    </div>
-                  </div>
-
-                  <div id="auth-alert" class="alert d-none" role="alert"></div>
-
-                  <button id="btn-login" class="btn btn-primary w-100" type="submit">
-                    <span class="btn-text">Entrar</span>
-                    <span class="spinner-border spinner-border-sm d-none"></span>
-                  </button>
-                </form>
-              </div>
-
-        
-              <div class="mt-2 text-end">
-                <button class="btn btn-link btn-sm p-0" data-bs-toggle="modal" data-bs-target="#modalReset">Esqueci minha senha</button>
-              </div>
-
-              <div class="modal fade" id="modalReset" tabindex="-1">
-                <div class="modal-dialog">
-                  <form id="form-reset" class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Recuperar senha</h5>
-                      <button class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body vstack gap-3">
-                      <input id="reset-user" class="form-control" placeholder="@usuario" required>
-                      <input id="reset-pass" type="password" class="form-control" placeholder="Nova senha" required minlength="3">
-                    </div>
-                    <div class="modal-footer">
-                      <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                      <button class="btn btn-primary" type="submit">Atualizar</button>
-                    </div>
-                  </form>
                 </div>
-              </div>
-
-              <div class="tab-pane fade" id="register-pane">
-                <form id="form-register" class="vstack gap-3" novalidate>
-                  <div>
-                    <label class="form-label">Nome</label>
-                    <input id="reg-name" class="form-control" required>
+                <div>
+                  <label class="form-label">Senha</label>
+                  <div class="input-group">
+                    <!-- Adicionando ícone correto do Bootstrap Icons -->
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input id="login-pass" type="password" class="form-control" required autocomplete="current-password">
                   </div>
-                  <div>
-                    <label class="form-label">Usuário (@handle)</label>
-                    <div class="input-group">
-                      <span class="input-group-text">@</span>
-                      <input id="reg-user" class="form-control" minlength="3" required>
-                    </div>
-                  </div>
-                  <div>
-                    <label class="form-label">Senha</label>
-                    <input id="reg-pass" type="password" class="form-control" minlength="3" required>
-                  </div>
-                  <button class="btn btn-success w-100" type="submit">Criar conta</button>
-                </form>
-              </div>
-
+                </div>
+                <div id="auth-alert" class="alert d-none" role="alert"></div>
+                <button id="btn-login" class="btn btn-primary w-100" type="submit">
+                  <span class="btn-text">Entrar</span>
+                  <span class="spinner-border spinner-border-sm d-none"></span>
+                </button>
+              </form>
             </div>
 
-            <hr class="my-4">
-            <p class="text-secondary small">
-              Ao continuar, você concorda com os Termos e Política de Privacidade do Echo.
-            </p>
-
+            <div class="tab-pane fade" id="register-pane">
+              <form id="form-register" class="vstack gap-3" novalidate>
+                <div><label class="form-label">Nome</label><input id="reg-name" class="form-control" required></div>
+                <div>
+                  <label class="form-label">Usuário (@handle)</label>
+                  <div class="input-group"><span class="input-group-text">@</span><input id="reg-user" class="form-control" minlength="3" required></div>
+                </div>
+                <div><label class="form-label">Senha</label><input id="reg-pass" type="password" class="form-control" minlength="3" required></div>
+                <button class="btn btn-success w-100" type="submit">Criar conta</button>
+              </form>
+            </div>
           </div>
+
+          <hr class="my-4">
+          <p class="text-secondary small">
+            Ao continuar, você concorda com os Termos e Política de Privacidade do Echo.
+          </p>
         </div>
       </div>
     </div>
   </main>
 
+  <!-- Footer com classe responsiva -->
+  <div class="footer-nav">
+    Echo | Sobre | Status | API | Docs | Suporte | Privacidade | Termos | Comunidade | Blog
+  </div>
+
+  <!-- Adicionando modal de recuperação de senha que estava faltando -->
+  <div class="modal fade" id="modalReset" tabindex="-1">
+    <div class="modal-dialog">
+      <form id="form-reset" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Recuperar senha</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body vstack gap-3">
+          <input id="reset-user" class="form-control" placeholder="@usuario" required>
+          <input id="reset-pass" type="password" class="form-control" placeholder="Nova senha" required minlength="3">
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button class="btn btn-primary" type="submit">Atualizar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="app.js"></script>
-</body>
 
+  <!-- Added particle generation script -->
+  <script>
+    // Generate floating particles
+    for (let i = 0; i < 30; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+      particle.style.animationDelay = Math.random() * 5 + 's';
+      document.body.appendChild(particle);
+    }
+  </script>
+</body>
 </html>
